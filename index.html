@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#176b4d">
+  <meta name="description" content="Personal shop product and purchase history tracker">
+  <title>My Shop Inventory</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">MS</div>
+    <div class="brand-copy">
+      <h1>My Shop Inventory</h1>
+      <p>Your personal purchase register</p>
+    </div>
+    <button id="backupBtn" class="button button-outline" type="button">Backup</button>
+  </header>
+
+  <main class="container">
+    <section class="stats">
+      <article class="stat-card"><span>Total products</span><strong id="productCount">0</strong></article>
+      <article class="stat-card"><span>Total purchase entries</span><strong id="purchaseCount">0</strong></article>
+      <article class="stat-card"><span>Total purchase spend</span><strong id="totalSpend">₹0.00</strong></article>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div><h2 id="formTitle">Add a product</h2><p>Add the product once, then record every purchase.</p></div>
+      </div>
+      <form id="productForm">
+        <input type="hidden" id="editingId">
+        <div class="form-grid">
+          <label class="field field-wide">Product name
+            <input id="productName" maxlength="100" placeholder="e.g. Basmati Rice 5 kg" required>
+          </label>
+          <label class="field field-wide">Product photo
+            <input id="productPhoto" type="file" accept="image/*">
+            <small>Optional. Use a clear photo; large images are resized before saving.</small>
+          </label>
+        </div>
+        <div id="photoPreviewWrap" class="photo-preview-wrap hidden">
+          <img id="photoPreview" alt="Selected product preview">
+          <button id="removePhotoBtn" class="text-button" type="button">Remove photo</button>
+        </div>
+        <div class="form-actions">
+          <button class="button button-primary" id="saveProductBtn" type="submit">Save product</button>
+          <button class="button button-light hidden" id="cancelEditBtn" type="button">Cancel edit</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div><h2>Record a purchase</h2><p>Each entry is saved separately so older rates remain available.</p></div>
+      </div>
+      <form id="purchaseForm">
+        <div class="form-grid">
+          <label class="field field-wide">Choose product
+            <select id="purchaseProduct" required><option value="">Add a product first</option></select>
+          </label>
+          <label class="field">Purchase date
+            <input id="purchaseDate" type="date" required>
+          </label>
+          <label class="field">Rate per item (₹)
+            <input id="purchaseRate" type="number" min="0" step="0.01" placeholder="0.00" required>
+          </label>
+          <label class="field">Quantity purchased
+            <input id="purchaseQty" type="number" min="0.001" step="any" value="1" required>
+          </label>
+          <label class="field field-wide">Note (optional)
+            <input id="purchaseNote" maxlength="250" placeholder="e.g. Supplier name or bill number">
+          </label>
+        </div>
+        <p class="calculation">Entry total: <strong id="entryTotal">₹0.00</strong></p>
+        <div class="form-actions"><button class="button button-primary" type="submit">Save purchase</button></div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading search-heading">
+        <div><h2>Your products</h2><p>Search a product to view its latest rate and full purchase history.</p></div>
+        <input id="searchInput" class="search-input" type="search" placeholder="Search products…">
+      </div>
+      <div id="productsList" class="products-list"></div>
+      <div id="emptyState" class="empty-state"><div class="empty-icon">▦</div><h3>No products yet</h3><p>Add your first product above to start your register.</p></div>
+    </section>
+
+    <section class="panel tools-panel">
+      <div><h2>Data backup</h2><p>Export a backup regularly. Restore it on another device to copy your records there.</p></div>
+      <div class="tools-actions">
+        <button id="exportBtn" class="button button-outline" type="button">Export backup</button>
+        <label class="button button-light file-button">Restore backup<input id="importFile" type="file" accept="application/json,.json"></label>
+      </div>
+      <p class="small-note">Restoring replaces the data currently saved in this browser. Export a backup first if you need to keep it.</p>
+    </section>
+    <footer>Saved locally in this browser • No account or paid subscription required</footer>
+  </main>
+
+  <dialog id="historyDialog" class="history-dialog">
+    <div class="dialog-header"><div><h2 id="historyTitle">Purchase history</h2><p id="historySubtitle"></p></div><button id="closeHistoryBtn" class="close-button" type="button" aria-label="Close">×</button></div>
+    <div id="historyContent"></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
